@@ -1,6 +1,6 @@
 ---
-# title: "Inequity in Jailing and Policing in the United States"
-# author: "Grant Branstetter"
+title: "Inequity in Jailing and Policing in the United States"
+# author: "Grant Branstetter" 
 # date: "2/28/2022"
 output: html_document
 ---
@@ -12,6 +12,13 @@ incarceration <- read.csv("https://raw.githubusercontent.com/vera-institute/inca
 
 library(ggplot2)
 library(plotly) 
+library(maps)
+library(mapproj)
+library(patchwork)
+library(tidyverse)
+library(ggrepel)
+library(ggstream)
+library(ggmap)
 
 blackincarceration <- get_total_jailed_black_pop(incarceration)
 whiteincarceration <- get_total_jailed_white_pop(incarceration)
@@ -32,11 +39,7 @@ wa_native_jailing_summary <- get_wa_native_jailing_summary(incarceration)
 wa_black_jailing <- get_wa_black_jailing(incarceration)
 wa_white_jailing <- get_wa_white_jailing(incarceration)
 wa_native_jailing <- get_wa_native_jailing(incarceration)
-
-
 ```
-# Inequity in Jailing and Policing in the United States
-
 ##### Author:
 Grant Branstetter: gbrans@uw.edu
 
@@ -51,7 +54,7 @@ February 25, 2022
 ### Introduction
 In this project, data from the Vera Institute of Justice was used to examine the disproportionate criminalization of minorities in the United States. To do so, mass incarceration was analyzed across three demographic groups, Black, Indigenous, and White individuals in the US. Five specific summary analyses were conducted in order to understand the issue in depth, based on evidence collected.
 
-To start, a summary was collected on the composite numbers of each group jailed in the most recent year available, 2018. It was found that largest population imprisoned in the US in this year was White, with an approximate total prison population of **`r whiteincarceration`**. The total Black imprisoned population was **`r blackincarceration`**, and the total indigenous imprisoned population was around **`r nativeincarceration`**.
+To start, a summary was collected on the composite numbers of each group jailed in the most recent year available, 2018. It was found that the largest population imprisoned in the US in this year was White, with an approximate total prison population of **`r whiteincarceration`**. The total Black imprisoned population was **`r blackincarceration`**, and the total Indigenous imprisoned population was around **`r nativeincarceration`**.
 
 Based on this information, it would initially seem disproportionate imprisoning in the US is not apparent, but this would not be representative of the populations of each group in the Country. To more accurately display this issue, the _proportions_ of each group jailed were calculated. In doing so, it was found that in 2018, for every 100,000 Black individuals in the United States, **`r blackjailingincidence`** were imprisoned. The next highest proportion was Native American, with **`r nativejailingincidence`** persons per 100,000 imprisoned. Finally, there were **`r whitejailingincidence`** White individuals imprisoned for every 100,000.
 
@@ -75,14 +78,17 @@ Lastly, the fifth summary statistic calculated the number of individuals incarce
 
 ### Trends Over Time
 
-```{r echo=FALSE, warning = FALSE,  message=FALSE}
+This chart was created to display the trend of disproportionate jailing of each demographic over time, since 1990. As is displayed, a clear pattern of discriminate use of the justice system against minorities is evident. This pattern is consistent, with rates steadily increasing. 
+```{r comparison, echo = FALSE}
 ggplotly(comparison)
 ```
 
-This chart was created to display the trend of disproportionate jailing of each demographic over time, since 1990. As is displayed, a clear pattern of discriminate use of the justice system against minorities is evident. This pattern is consistent, with rates steadily increasing. 
 
 ### Variable Comparison Chart
 
+These charts display total incarceration over total population of the five largest counties in Washington State. Darker circles are more recent as the data is more modern, while faded circles are older. The larger the circles are, the larger the total population of the county is. Colors correlate with the county. Detailed information of the variables calculated and raw numbers appears when hovering over each circle. 
+
+These charts are included to show side by side comparisons of incarceration by demographic. A pattern emerges, wherin jailings of minorities increase by county, regardless of population. This pattern implies a systemic justice issue. 
 ```{r echo=FALSE, warning = FALSE,  message=FALSE}
 ggplotly(black_plot)
 ```
@@ -95,13 +101,9 @@ ggplotly(white_plot)
 ggplotly(native_plot)
 ```
 
-These charts display total incarceration over total population of the five largest counties in Washington State. Darker circles are more recent as the data is more modern, while faded circles are older. The larger the circles are, the larger the total population of the county is. Colors correlate with the county. Detailed information of the variables calculated and raw numbers appears when hovering over each circle. 
-
-These charts are included to show side by side comparisons of incarceration by demographic. A pattern emerges, wherin jailings of minorities increase by county, regardless of population. This pattern implies a systemic justice issue. 
-
 ### Map
-```{r echo=FALSE, warning = FALSE,  message=FALSE}
-ggplotly(native_jailing_map)
-```
-As an Indigenous student, I included this graph because I was curious as to where in this country Native Americans are incarcerated the most. The result was disconcerting. When viewing a map of total Indigenous population by county in the United States, it is found that there are high numbers of Indigenous people particularly in Oklahoma, South Dakota, Montana, and Eastern Washington. As observable visibly, the incarceration of Native Americans is not apparent in any of these locations, and the Native incarceration map seems to display limited overlap with Native population. This pattern could signal the fact that court systems continually target persons of color and minorities. 
 
+As an Indigenous student, I included the following map because I was curious as to where in this country Native Americans are incarcerated the most. The result was disconcerting. When viewing a map of total Indigenous population by county in the United States, it is found that there are high numbers of Indigenous people particularly in Oklahoma, South Dakota, Montana, and Eastern Washington. As observable visibly, the incarceration of Native Americans is not apparent in any of these locations, and the Native incarceration map seems to display limited overlap with Native population. This pattern could signal the fact that court systems continually target persons of color and minorities. 
+```{r, echo=FALSE, warning = FALSE,  message=FALSE}
+(native_jailing_map)
+```
